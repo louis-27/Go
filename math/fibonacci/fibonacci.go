@@ -2,6 +2,8 @@
 // description: Get the nth Fibonacci Number
 // details:
 // In mathematics, the Fibonacci numbers, commonly denoted Fn, form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1. [Fibonacci number](https://en.wikipedia.org/wiki/Fibonacci_number)
+// time complexity: O(log n)
+// space complexity: O(1)
 // author(s) [red_byte](https://github.com/i-redbyte)
 // see fibonacci_test.go
 
@@ -44,4 +46,14 @@ func Formula(n uint) uint {
 	phi := (sqrt5 + 1) / 2
 	powPhi := math.Pow(phi, float64(n))
 	return uint(powPhi/sqrt5 + 0.5)
+}
+
+// Recursive calculates the n-th fibonacci number recursively by adding the previous two Fibonacci numbers.
+// This algorithm is extremely slow for bigger numbers, but provides a simpler implementation.
+func Recursive(n uint) uint {
+	if n <= 1 {
+		return n
+	}
+
+	return Recursive(n-1) + Recursive(n-2)
 }

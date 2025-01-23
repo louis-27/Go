@@ -1,4 +1,8 @@
 // Package caesar is the shift cipher
+// description: Caesar cipher
+// details : Caesar cipher is a type of substitution cipher in which each letter in the plaintext is shifted a certain number of places down the alphabet.
+// time complexity: O(n)
+// space complexity: O(n)
 // ref: https://en.wikipedia.org/wiki/Caesar_cipher
 package caesar
 
@@ -9,12 +13,12 @@ func Encrypt(input string, key int) string {
 	key8 := byte(key%26+26) % 26
 
 	var outputBuffer []byte
-	// r is a rune, which is the equivalent of uint32.
-	for _, r := range input {
-		newByte := byte(r)
-		if 'A' <= r && r <= 'Z' {
+	// b is a byte, which is the equivalent of uint8.
+	for _, b := range []byte(input) {
+		newByte := b
+		if 'A' <= b && b <= 'Z' {
 			outputBuffer = append(outputBuffer, 'A'+(newByte-'A'+key8)%26)
-		} else if 'a' <= r && r <= 'z' {
+		} else if 'a' <= b && b <= 'z' {
 			outputBuffer = append(outputBuffer, 'a'+(newByte-'a'+key8)%26)
 		} else {
 			outputBuffer = append(outputBuffer, newByte)

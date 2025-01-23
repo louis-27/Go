@@ -16,31 +16,31 @@ import (
 
 // SList is our struct that point to stack with container/list.List library
 type SList struct {
-	stack *list.List
+	Stack *list.List
 }
 
 // Push add a value into our stack
-func (sl *SList) Push(val interface{}) {
-	sl.stack.PushFront(val)
+func (sl *SList) Push(val any) {
+	sl.Stack.PushFront(val)
 }
 
 // Peak is return last value that insert into our stack
-func (sl *SList) Peak() (interface{}, error) {
-	if !sl.Empty() {
-		element := sl.stack.Front()
+func (sl *SList) Peek() (any, error) {
+	if !sl.IsEmpty() {
+		element := sl.Stack.Front()
 		return element.Value, nil
 	}
 	return "", fmt.Errorf("stack list is empty")
 }
 
 // Pop is return last value that insert into our stack
-//also it will remove it in our stack
-func (sl *SList) Pop() (interface{}, error) {
-	if !sl.Empty() {
+// also it will remove it in our stack
+func (sl *SList) Pop() (any, error) {
+	if !sl.IsEmpty() {
 		// get last element that insert into stack
-		element := sl.stack.Front()
+		element := sl.Stack.Front()
 		// remove element in stack
-		sl.stack.Remove(element)
+		sl.Stack.Remove(element)
 		// return element value
 		return element.Value, nil
 	}
@@ -49,12 +49,12 @@ func (sl *SList) Pop() (interface{}, error) {
 
 // Length return length of our stack
 func (sl *SList) Length() int {
-	return sl.stack.Len()
+	return sl.Stack.Len()
 }
 
 // Empty check our stack has value or not
-func (sl *SList) Empty() bool {
+func (sl *SList) IsEmpty() bool {
 	// check our stack is empty or not
 	// if is 0 it means our stack is empty otherwise is not empty
-	return sl.stack.Len() == 0
+	return sl.Stack.Len() == 0
 }

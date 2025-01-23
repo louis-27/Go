@@ -1,10 +1,20 @@
+// mergesort.go
+// description: Implementation of merge sort algorithm
+// worst-case time complexity: O(n log n)
+// average-case time complexity: O(n log n)
+// space complexity: O(n)
+
 package sort
 
-import "github.com/TheAlgorithms/Go/math/min"
+import (
+	"github.com/TheAlgorithms/Go/constraints"
+	"github.com/TheAlgorithms/Go/math/min"
+	"sync"
+)
 
-func merge(a []int, b []int) []int {
+func merge[T constraints.Ordered](a []T, b []T) []T {
 
-	var r = make([]int, len(a)+len(b))
+	var r = make([]T, len(a)+len(b))
 	var i = 0
 	var j = 0
 
@@ -33,8 +43,8 @@ func merge(a []int, b []int) []int {
 
 }
 
-//Mergesort Perform mergesort on a slice of ints
-func Mergesort(items []int) []int {
+// Merge Perform merge sort on a slice
+func Merge[T constraints.Ordered](items []T) []T {
 
 	if len(items) < 2 {
 		return items
@@ -42,13 +52,13 @@ func Mergesort(items []int) []int {
 	}
 
 	var middle = len(items) / 2
-	var a = Mergesort(items[:middle])
-	var b = Mergesort(items[middle:])
+	var a = Merge(items[:middle])
+	var b = Merge(items[middle:])
 	return merge(a, b)
 
 }
 
-func MergeIter(items []int) []int {
+func MergeIter[T constraints.Ordered](items []T) []T {
 	for step := 1; step < len(items); step += step {
 		for i := 0; i+step < len(items); i += 2 * step {
 			tmp := merge(items[i:i+step], items[i+step:min.Int(i+2*step, len(items))])
@@ -56,4 +66,29 @@ func MergeIter(items []int) []int {
 		}
 	}
 	return items
+}
+
+// ParallelMerge Perform merge sort on a slice using goroutines
+func ParallelMerge[T constraints.Ordered](items []T) []T {
+	if len(items) < 2 {
+		return items
+	}
+
+	if len(items) < 2048 {
+		return Merge(items)
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	var middle = len(items) / 2
+	var a []T
+	go func() {
+		defer wg.Done()
+		a = ParallelMerge(items[:middle])
+	}()
+	var b = ParallelMerge(items[middle:])
+
+	wg.Wait()
+	return merge(a, b)
 }

@@ -1,8 +1,12 @@
-package sort
+package sort_test
 
 import (
+	"math/rand"
 	"reflect"
 	"testing"
+	"time"
+
+	"github.com/TheAlgorithms/Go/sort"
 )
 
 func testFramework(t *testing.T, sortingFunction func([]int) []int) {
@@ -72,69 +76,133 @@ func testFramework(t *testing.T, sortingFunction func([]int) []int) {
 	}
 }
 
-//BEGIN TESTS
+// BEGIN TESTS
+func TestBinaryInsertion(t *testing.T) {
+	testFramework(t, sort.BinaryInsertion[int])
+}
 
 func TestBubble(t *testing.T) {
-	testFramework(t, bubbleSort)
+	testFramework(t, sort.Bubble[int])
+}
+
+func TestBogo(t *testing.T) {
+	t.Skip("Skipping test for Bogo Sort, as it uses a lot of resource.")
+	testFramework(t, sort.Bogo[int])
+}
+
+func TestBucketSort(t *testing.T) {
+	testFramework(t, sort.Bucket[int])
+}
+
+func TestCocktailSort(t *testing.T) {
+	testFramework(t, sort.Cocktail[int])
 }
 
 func TestExchange(t *testing.T) {
-	testFramework(t, Exchange)
+	testFramework(t, sort.Exchange[int])
 }
 
 func TestInsertion(t *testing.T) {
-	testFramework(t, InsertionSort)
+	testFramework(t, sort.Insertion[int])
 }
 
 func TestMerge(t *testing.T) {
-	testFramework(t, Mergesort)
+	testFramework(t, sort.Merge[int])
 }
 
 func TestMergeIter(t *testing.T) {
-	testFramework(t, MergeIter)
+	testFramework(t, sort.MergeIter[int])
+}
+
+func TestMergeParallel(t *testing.T) {
+	testFramework(t, sort.ParallelMerge[int])
+
+	// Test parallel merge sort with a large slice
+	t.Run("ParallelMerge on large slice", func(t *testing.T) {
+		rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
+		size := 100000
+		randomLargeSlice := make([]int, size)
+		for i := range randomLargeSlice {
+			randomLargeSlice[i] = rnd.Intn(size)
+		}
+		sortedSlice := sort.ParallelMerge[int](randomLargeSlice)
+		for i := 0; i < len(sortedSlice)-1; i++ {
+			if sortedSlice[i] > sortedSlice[i+1] {
+				t.Errorf("ParallelMerge failed")
+			}
+		}
+	})
 }
 
 func TestHeap(t *testing.T) {
-	testFramework(t, HeapSort)
+	testFramework(t, sort.HeapSort[int])
 }
 
 func TestCount(t *testing.T) {
-	testFramework(t, Count)
+	testFramework(t, sort.Count[int])
 }
 
 func TestQuick(t *testing.T) {
-	testFramework(t, QuickSort)
+	testFramework(t, sort.Quicksort[int])
 }
 
 func TestShell(t *testing.T) {
-	testFramework(t, ShellSort)
+	testFramework(t, sort.Shell[int])
 }
 
 func TestRadix(t *testing.T) {
-	testFramework(t, RadixSort)
+	testFramework(t, sort.RadixSort[int])
 }
 
 func TestSimple(t *testing.T) {
-	testFramework(t, SimpleSort)
+	testFramework(t, sort.Simple[int])
 }
 
 func TestImprovedSimple(t *testing.T) {
-	testFramework(t, ImprovedSimpleSort)
+	testFramework(t, sort.ImprovedSimple[int])
 }
 
 func TestSelection(t *testing.T) {
-	testFramework(t, SelectionSort)
+	testFramework(t, sort.Selection[int])
 }
 
 func TestComb(t *testing.T) {
-	testFramework(t, Comb)
+	testFramework(t, sort.Comb[int])
+}
+
+func TestPancakeSort(t *testing.T) {
+	testFramework(t, sort.Pancake[int])
 }
 
 func TestPigeonhole(t *testing.T) {
-	testFramework(t, Pigeonhole)
+	testFramework(t, sort.Pigeonhole[int])
 }
 
-//END TESTS
+func TestPatience(t *testing.T) {
+	testFramework(t, sort.Patience[int])
+}
+
+func TestCycle(t *testing.T) {
+	testFramework(t, sort.Cycle[int])
+}
+
+func TestTimsort(t *testing.T) {
+	testFramework(t, sort.Timsort[int])
+}
+
+func TestCircle(t *testing.T) {
+	testFramework(t, sort.Circle[int])
+}
+
+func TestOddEvenSort(t *testing.T) {
+	testFramework(t, sort.OddEvenSort[int])
+}
+
+func TestStooge(t *testing.T) {
+	testFramework(t, sort.Stooge[int])
+}
+
+// END TESTS
 
 func benchmarkFramework(b *testing.B, f func(arr []int) []int) {
 	var sortTests = []struct {
@@ -175,63 +243,108 @@ func benchmarkFramework(b *testing.B, f func(arr []int) []int) {
 
 //BEGIN BENCHMARKS
 
+func BenchmarkBinaryInsertion(b *testing.B) {
+	benchmarkFramework(b, sort.BinaryInsertion[int])
+}
+
 func BenchmarkBubble(b *testing.B) {
-	benchmarkFramework(b, bubbleSort)
+	benchmarkFramework(b, sort.Bubble[int])
+}
+
+func BenchmarkBogo(b *testing.B) {
+	b.Skip("Skipping benchmark for Bogo Sort, as it uses a lot of resource.")
+	benchmarkFramework(b, sort.Bogo[int])
+}
+
+func BenchmarkBucketSort(b *testing.B) {
+	benchmarkFramework(b, sort.Bucket[int])
+}
+
+func BenchmarkCocktailSort(b *testing.B) {
+	benchmarkFramework(b, sort.Cocktail[int])
 }
 
 func BenchmarkExchange(b *testing.B) {
-	benchmarkFramework(b, Exchange)
+	benchmarkFramework(b, sort.Exchange[int])
 }
 
 func BenchmarkInsertion(b *testing.B) {
-	benchmarkFramework(b, InsertionSort)
+	benchmarkFramework(b, sort.Insertion[int])
 }
 
 func BenchmarkMerge(b *testing.B) {
-	benchmarkFramework(b, Mergesort)
+	benchmarkFramework(b, sort.Merge[int])
 }
 
 func BenchmarkMergeIter(b *testing.B) {
-	benchmarkFramework(b, MergeIter)
+	benchmarkFramework(b, sort.MergeIter[int])
+}
+
+func BenchmarkMergeParallel(b *testing.B) {
+	benchmarkFramework(b, sort.ParallelMerge[int])
 }
 
 func BenchmarkHeap(b *testing.B) {
-	benchmarkFramework(b, HeapSort)
+	benchmarkFramework(b, sort.HeapSort[int])
 }
 
 func BenchmarkCount(b *testing.B) {
-	benchmarkFramework(b, Count)
+	benchmarkFramework(b, sort.Count[int])
 }
 
 func BenchmarkQuick(b *testing.B) {
-	benchmarkFramework(b, QuickSort)
+	benchmarkFramework(b, sort.Quicksort[int])
 }
 
 func BenchmarkShell(b *testing.B) {
-	benchmarkFramework(b, ShellSort)
+	benchmarkFramework(b, sort.Shell[int])
 }
 
 func BenchmarkRadix(b *testing.B) {
-	benchmarkFramework(b, RadixSort)
+	benchmarkFramework(b, sort.RadixSort[int])
 }
 
 func BenchmarkSimple(b *testing.B) {
-	benchmarkFramework(b, SimpleSort)
+	benchmarkFramework(b, sort.Simple[int])
 }
 
 func BenchmarkImprovedSimple(b *testing.B) {
-	benchmarkFramework(b, ImprovedSimpleSort)
+	benchmarkFramework(b, sort.ImprovedSimple[int])
 }
 
 // Very Slow, consider commenting
 func BenchmarkSelection(b *testing.B) {
-	benchmarkFramework(b, SelectionSort)
+	benchmarkFramework(b, sort.Selection[int])
 }
 
 func BenchmarkComb(b *testing.B) {
-	benchmarkFramework(b, Comb)
+	benchmarkFramework(b, sort.Comb[int])
+}
+
+func BenchmarkPancakeSort(b *testing.B) {
+	benchmarkFramework(b, sort.Pancake[int])
 }
 
 func BenchmarkPigeonhole(b *testing.B) {
-	benchmarkFramework(b, Pigeonhole)
+	benchmarkFramework(b, sort.Pigeonhole[int])
+}
+
+func BenchmarkPatience(b *testing.B) {
+	benchmarkFramework(b, sort.Patience[int])
+}
+
+func BenchmarkCycle(b *testing.B) {
+	benchmarkFramework(b, sort.Cycle[int])
+}
+
+func BenchmarkTimsort(b *testing.B) {
+	benchmarkFramework(b, sort.Timsort[int])
+}
+
+func BenchmarkCircle(b *testing.B) {
+	benchmarkFramework(b, sort.Circle[int])
+}
+
+func BenchmarkStooge(b *testing.B) {
+	benchmarkFramework(b, sort.Stooge[int])
 }

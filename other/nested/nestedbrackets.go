@@ -8,15 +8,18 @@ package nested
 //
 // A sequence of brackets `s` is considered properly nested
 // if any of the following conditions are true:
-// 	- `s` is empty;
-// 	- `s` has the form (U) or [U] or {U} where U is a properly nested string;
-// 	- `s` has the form VW where V and W are properly nested strings.
+//   - `s` is empty;
+//   - `s` has the form (U) or [U] or {U} where U is a properly nested string;
+//   - `s` has the form VW where V and W are properly nested strings.
 //
 // For example, the string "()()[()]" is properly nested but "[(()]" is not.
 //
 // **Note** Providing characters other then brackets would return false,
 // despite brackets sequence in the string. Make sure to filter
 // input before usage.
+// time complexity: O(n)
+// space complexity: O(n)
+
 func IsBalanced(input string) bool {
 	if len(input) == 0 {
 		return true

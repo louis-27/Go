@@ -2,25 +2,24 @@
 // description: Transposition cipher
 // details:
 // Implementation "Transposition cipher" is a method of encryption by which the positions held by units of plaintext (which are commonly characters or groups of characters) are shifted according to a regular system, so that the ciphertext constitutes a permutation of the plaintext [Transposition cipher](https://en.wikipedia.org/wiki/Transposition_cipher)
+// time complexity: O(n)
+// space complexity: O(n)
 // author(s) [red_byte](https://github.com/i-redbyte)
 // see transposition_test.go
 
 package transposition
 
 import (
+	"errors"
+	"fmt"
 	"sort"
 	"strings"
 )
 
-type NoTextToEncryptError struct{}
-type KeyMissingError struct{}
+var ErrNoTextToEncrypt = errors.New("no text to encrypt")
+var ErrKeyMissing = errors.New("missing Key")
 
-func (n *NoTextToEncryptError) Error() string {
-	return "No text to encrypt"
-}
-func (n *KeyMissingError) Error() string {
-	return "Missing Key"
-}
+const placeholder = ' '
 
 func getKey(keyWord string) []int {
 	keyWord = strings.ToLower(keyWord)
@@ -51,56 +50,58 @@ func getIndex(wordSet []rune, subString rune) int {
 	return 0
 }
 
-func Encrypt(text []rune, keyWord string) (string, error) {
+func Encrypt(text []rune, keyWord string) ([]rune, error) {
 	key := getKey(keyWord)
-	space := ' '
 	keyLength := len(key)
 	textLength := len(text)
 	if keyLength <= 0 {
-		return "", &KeyMissingError{}
+		return nil, ErrKeyMissing
 	}
 	if textLength <= 0 {
-		return "", &NoTextToEncryptError{}
+		return nil, ErrNoTextToEncrypt
+	}
+	if text[len(text)-1] == placeholder {
+		return nil, fmt.Errorf("%w: cannot encrypt a text, %q, ending with the placeholder char %q", ErrNoTextToEncrypt, text, placeholder)
 	}
 	n := textLength % keyLength
 
 	for i := 0; i < keyLength-n; i++ {
-		text = append(text, space)
+		text = append(text, placeholder)
 	}
 	textLength = len(text)
-	result := ""
+	var result []rune
 	for i := 0; i < textLength; i += keyLength {
 		transposition := make([]rune, keyLength)
 		for j := 0; j < keyLength; j++ {
 			transposition[key[j]-1] = text[i+j]
 		}
-		result += string(transposition)
+		result = append(result, transposition...)
 	}
 	return result, nil
 }
 
-func Decrypt(text []rune, keyWord string) (string, error) {
+func Decrypt(text []rune, keyWord string) ([]rune, error) {
 	key := getKey(keyWord)
 	textLength := len(text)
 	if textLength <= 0 {
-		return "", &NoTextToEncryptError{}
+		return nil, ErrNoTextToEncrypt
 	}
 	keyLength := len(key)
 	if keyLength <= 0 {
-		return "", &KeyMissingError{}
+		return nil, ErrKeyMissing
 	}
-	space := ' '
 	n := textLength % keyLength
 	for i := 0; i < keyLength-n; i++ {
-		text = append(text, space)
+		text = append(text, placeholder)
 	}
-	result := ""
+	var result []rune
 	for i := 0; i < textLength; i += keyLength {
 		transposition := make([]rune, keyLength)
 		for j := 0; j < keyLength; j++ {
 			transposition[j] = text[i+key[j]-1]
 		}
-		result += string(transposition)
+		result = append(result, transposition...)
 	}
+	result = []rune(strings.TrimRight(string(result), string(placeholder)))
 	return result, nil
 }

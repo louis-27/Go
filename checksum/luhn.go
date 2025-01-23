@@ -1,14 +1,16 @@
 // lunh.go
 // description: Luhn algorithm
 // details: is a simple checksum formula used to validate a variety of identification numbers, such as credit card numbers, IMEI numbers, etc [Lunh](https://en.wikipedia.org/wiki/Luhn_algorithm)
+// time complexity: O(n)
+// space complexity: O(1)
 // author(s) [red_byte](https://github.com/i-redbyte)
 // see lunh_test.go
 
 // Package checksum describes algorithms for finding various checksums
 package checksum
 
-// LuhnAlgorithm This function calculates the checksum using the Luna algorithm
-func LuhnAlgorithm(s []rune) bool {
+// Luhn validates the provided data using the Luhn algorithm.
+func Luhn(s []byte) bool {
 	n := len(s)
 	number := 0
 	result := 0

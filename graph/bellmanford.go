@@ -1,8 +1,10 @@
 // The Bellman–Ford algorithm is an algorithm that computes shortest paths from a
-// single source vertex to all of the other vertices in a weighted durected graph.
+// single source vertex to all of the other vertices in a weighted directed graph.
 // It is slower than Dijkstra but capable of handling negative edge weights.
 // https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm
 // Implementation is based on the book 'Introduction to Algorithms' (CLRS)
+// time complexity: O(V*E) where V is the number of vertices and E is the number of edges in the graph
+// space complexity: O(V) where V is the number of vertices in the graph
 
 package graph
 
